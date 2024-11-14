@@ -4,13 +4,14 @@ import (
 	"log"
 	"net/http"
 	"vet-clinic-api/config"
+	"vet-clinic-api/pkg/cat"
 
 	"github.com/go-chi/chi/v5"
 )
 
 func Routes(configuration *config.Config) *chi.Mux {
     router := chi.NewRouter()
-    router.Mount("/api/v1/agecalculator", agecalculator.Routes(configuration))
+    router.Mount("/api/v1/cat", cat.Routes(configuration))
     return router
 }
 
