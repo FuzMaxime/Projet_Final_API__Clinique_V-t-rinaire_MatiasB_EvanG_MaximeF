@@ -62,8 +62,8 @@ func (config *CatConfig) GetOneCatHandler(w http.ResponseWriter, r *http.Request
 
 	render.JSON(w, r, catTarget)
 }
+
 func (config *CatConfig) UpdateCatHandler(w http.ResponseWriter, r *http.Request) {
-	// Récupération de l'ID depuis les paramètres de l'URL
 	catId := chi.URLParam(r, "id")
 	intcatId, err := strconv.Atoi(catId)
 	if err != nil {
@@ -71,24 +71,30 @@ func (config *CatConfig) UpdateCatHandler(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	// Validation et binding du payload
+	catEntry, err := config.CatEntryRepository.FindByID(uint(intcatId))
+	if err != nil {
+		render.JSON(w, r, map[string]string{"error": "Cat not found"})
+		return
+	}
+
 	req := &model.CatRequest{}
 	if err := render.Bind(r, req); err != nil {
 		render.JSON(w, r, map[string]string{"error": "Invalid request payload"})
 		return
 	}
 
-	// Recherche de l'entrée dans le repository par ID
-	catEntry := &dbmodel.CatEntry{Name: req.Name, Age: req.Age, Race: req.Race, Weight: req.Weight}
-	entries, err := config.CatEntryRepository.FindAll()
-	for _, cat := range entries {
-		if cat.ID == uint(intcatId) {
-			config.CatEntryRepository.Update(catEntry)
-		}
+	catEntry.Name = req.Name
+	catEntry.Age = req.Age
+	catEntry.Race = req.Race
+	catEntry.Weight = req.Weight
+
+	updatedCat, err := config.CatEntryRepository.Update(catEntry)
+	if err != nil {
+		render.JSON(w, r, map[string]string{"error": "Failed to update cat"})
+		return
 	}
 
-	// Retour de réponse en cas de succès
-	render.JSON(w, r, map[string]string{"message": "Update successful"})
+	render.JSON(w, r, updatedCat)
 }
 
 func (config *CatConfig) DeleteCatHandler(w http.ResponseWriter, r *http.Request) {

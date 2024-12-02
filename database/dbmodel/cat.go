@@ -15,6 +15,7 @@ type CatEntry struct {
 type CatEntryRepository interface {
 	Create(entry *CatEntry) (*CatEntry, error)
 	FindAll() ([]*CatEntry, error)
+	FindByID(id uint) (*CatEntry, error)
 	Update(entry *CatEntry) (*CatEntry, error)
 	Delete(entry *CatEntry) (*CatEntry, error)
 }
