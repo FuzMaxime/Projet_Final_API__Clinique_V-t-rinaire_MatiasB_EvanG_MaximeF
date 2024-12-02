@@ -1,4 +1,4 @@
-package Treatment
+package treatment
 
 import (
 	"net/http"

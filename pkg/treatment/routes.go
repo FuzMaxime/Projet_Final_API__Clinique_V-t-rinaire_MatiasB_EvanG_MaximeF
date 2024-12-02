@@ -1,4 +1,4 @@
-package Treatment
+package treatment
 
 import (
 	"vet-clinic-api/config"

@@ -1,4 +1,4 @@
-package Visit
+package visit
 
 import (
 	"net/http"
