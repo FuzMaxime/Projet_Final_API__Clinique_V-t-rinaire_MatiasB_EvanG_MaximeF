@@ -21,4 +21,6 @@ func (a *TreatmentRequest) Bind(r *http.Request) error {
 }
 
 type TreatmentResponse struct {
+	Medoc   string `json:"treatment_medoc"`
+	IdVisit int    `json:"treatment_id_visit"`
 }

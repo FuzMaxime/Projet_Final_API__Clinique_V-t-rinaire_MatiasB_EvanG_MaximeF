@@ -4,6 +4,8 @@ import (
 	"log"
 	"net/http"
 	"vet-clinic-api/config"
+	"vet-clinic-api/pkg/Treatment"
+	"vet-clinic-api/pkg/Visit"
 	"vet-clinic-api/pkg/cat"
 
 	"github.com/go-chi/chi/v5"
@@ -11,7 +13,9 @@ import (
 
 func Routes(configuration *config.Config) *chi.Mux {
 	router := chi.NewRouter()
-	router.Mount("/api/v1/clinique", cat.Routes(configuration))
+	router.Mount("/api/v1/clinique/cat", cat.Routes(configuration))
+	router.Mount("/api/v1/clinique/treatment", Treatment.Routes(configuration))
+	router.Mount("/api/v1/clinique/visit", Visit.Routes(configuration))
 	return router
 }
 

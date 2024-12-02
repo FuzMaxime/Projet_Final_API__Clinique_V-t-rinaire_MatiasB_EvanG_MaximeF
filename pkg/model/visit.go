@@ -29,4 +29,8 @@ func (a *VisitRequest) Bind(r *http.Request) error {
 }
 
 type VisitResponse struct {
+	Date  string `json:"visit_date"`
+	Motif string `json:"visit_motif"`
+	Veto  string `json:"visit_veto"`
+	IdCat int    `json:"visit_id_cat"`
 }
