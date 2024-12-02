@@ -2,10 +2,12 @@ package Visit
 
 import (
 	"net/http"
+	"strconv"
 	"vet-clinic-api/config"
 	"vet-clinic-api/database/dbmodel"
 	"vet-clinic-api/pkg/model"
 
+	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 )
 
@@ -32,7 +34,14 @@ func (config *VisitConfig) VisitHandler(w http.ResponseWriter, r *http.Request) 
 }
 
 func (config *VisitConfig) VisitHistoryHandler(w http.ResponseWriter, r *http.Request) {
+	idCat := chi.URLParam(r, "id_cat")
+	intIdCat, err := strconv.Atoi(idCat)
 	entries, err := config.VisitEntryRepository.FindAll()
+	for i := 0; i < len(entries); i++ {
+		if entries[i].IdCat != intIdCat {
+			entries = append(entries[:i], entries[i+1:]...)
+		}
+	}
 	if err != nil {
 		render.JSON(w, r, map[string]string{"error": "Failed to retrieve history"})
 		return

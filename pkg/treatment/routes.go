@@ -1,4 +1,4 @@
-package cat
+package Treatment
 
 import (
 	"vet-clinic-api/config"
@@ -7,11 +7,11 @@ import (
 )
 
 func Routes(configuration *config.Config) *chi.Mux {
-	catConfig := New(configuration)
+	treatmentConfig := New(configuration)
 	router := chi.NewRouter()
 
-	router.Post("/age-in-cat-years", catConfig.CatHandler)
-	router.Get("/history", catConfig.CatHistoryHandler)
+	router.Post("/treatment_create", treatmentConfig.TreatmentHandler)
+	router.Get("/history/{id_visit}", treatmentConfig.TreatmentHistoryHandler)
 
 	return router
 }

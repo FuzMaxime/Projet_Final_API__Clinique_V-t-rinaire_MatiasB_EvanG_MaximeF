@@ -7,11 +7,11 @@ import (
 )
 
 func Routes(configuration *config.Config) *chi.Mux {
-	catConfig := New(configuration)
+	visitConfig := New(configuration)
 	router := chi.NewRouter()
 
-	router.Post("/age-in-cat-years", catConfig.CatHandler)
-	router.Get("/history", catConfig.CatHistoryHandler)
+	router.Post("/visit_create", visitConfig.VisitHandler)
+	router.Get("/history/{id_cat}", visitConfig.VisitHistoryHandler)
 
 	return router
 }
