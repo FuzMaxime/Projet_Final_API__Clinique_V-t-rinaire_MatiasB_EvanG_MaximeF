@@ -29,7 +29,7 @@ func (config *TreatmentConfig) TreatmentHandler(w http.ResponseWriter, r *http.R
 	treatmentEntry := &dbmodel.TreatmentEntry{Medoc: req.Medoc, IdVisit: req.IdVisit}
 	config.TreatmentEntryRepository.Create(treatmentEntry)
 
-	res := &model.TreatmentResponse{}
+	res := &model.TreatmentResponse{Medoc: req.Medoc, IdVisit: req.IdVisit}
 	render.JSON(w, r, res)
 }
 
@@ -37,16 +37,16 @@ func (config *TreatmentConfig) TreatmentHistoryHandler(w http.ResponseWriter, r 
 
 	IdVisit := chi.URLParam(r, "id_visit")
 	intIdVisit, err := strconv.Atoi(IdVisit)
-	entries, err := config.VisitEntryRepository.FindAll()
-	for i := 0; i < len(entries); i++ {
-		if entries[i].IdCat != intIdVisit {
-			entries = append(entries[:i], entries[i+1:]...)
+	entries, err := config.TreatmentEntryRepository.FindAll()
+	newList := []*dbmodel.TreatmentEntry{}
+	for _, value := range entries {
+		if value.IdVisit == intIdVisit {
+			newList = append(newList, value)
 		}
 	}
-
 	if err != nil {
 		render.JSON(w, r, map[string]string{"error": "Failed to retrieve history"})
 		return
 	}
-	render.JSON(w, r, entries)
+	render.JSON(w, r, newList)
 }

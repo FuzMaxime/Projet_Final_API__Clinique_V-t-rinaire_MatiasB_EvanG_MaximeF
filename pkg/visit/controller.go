@@ -29,22 +29,23 @@ func (config *VisitConfig) VisitHandler(w http.ResponseWriter, r *http.Request) 
 	visitEntry := &dbmodel.VisitEntry{Date: req.Date, Veto: req.Veto, Motif: req.Motif, IdCat: req.IdCat}
 	config.VisitEntryRepository.Create(visitEntry)
 
-	res := &model.VisitResponse{}
+	res := &model.VisitResponse{Date: req.Date, Veto: req.Veto, Motif: req.Motif, IdCat: req.IdCat}
 	render.JSON(w, r, res)
 }
 
 func (config *VisitConfig) VisitHistoryHandler(w http.ResponseWriter, r *http.Request) {
 	idCat := chi.URLParam(r, "id_cat")
-	intIdCat, err := strconv.Atoi(idCat)
+	intIdCat, _ := strconv.Atoi(idCat)
 	entries, err := config.VisitEntryRepository.FindAll()
-	for i := 0; i < len(entries); i++ {
-		if entries[i].IdCat != intIdCat {
-			entries = append(entries[:i], entries[i+1:]...)
+	newList := []*dbmodel.VisitEntry{}
+	for _, value := range entries {
+		if value.IdCat == intIdCat {
+			newList = append(newList, value)
 		}
 	}
 	if err != nil {
 		render.JSON(w, r, map[string]string{"error": "Failed to retrieve history"})
 		return
 	}
-	render.JSON(w, r, entries)
+	render.JSON(w, r, newList)
 }

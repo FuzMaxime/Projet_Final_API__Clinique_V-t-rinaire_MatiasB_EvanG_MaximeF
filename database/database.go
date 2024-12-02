@@ -8,8 +8,10 @@ import (
 )
 
 func Migrate(db *gorm.DB) {
-    db.AutoMigrate(
-        &dbmodel.CatEntry{},
-    )
-    log.Println("Database migrated successfully")
+	db.AutoMigrate(
+		&dbmodel.CatEntry{},
+		&dbmodel.TreatmentEntry{},
+		&dbmodel.VisitEntry{},
+	)
+	log.Println("Database migrated successfully")
 }
