@@ -9,24 +9,26 @@ import (
 )
 
 type Config struct {
-    // Connexion aux repositories
-    CatEntryRepository     dbmodel.CatEntryRepository
+	// Connexion aux repositories
+	CatEntryRepository       dbmodel.CatEntryRepository
+	TreatmentEntryRepository dbmodel.TreatmentEntryRepository
+	VisitEntryRepository     dbmodel.VisitEntryRepository
 }
 
 func New() (*Config, error) {
-    config := Config{}
+	config := Config{}
 
-    // Initialisation de la connexion à la base de données
-    databaseSession, err := gorm.Open(sqlite.Open("vet-clinic-api.db"), &gorm.Config{})
-    if err != nil {
-        return &config, err
-    }
+	// Initialisation de la connexion à la base de données
+	databaseSession, err := gorm.Open(sqlite.Open("vet-clinic-api.db"), &gorm.Config{})
+	if err != nil {
+		return &config, err
+	}
 
-    // Migration des modèles
-    database.Migrate(databaseSession)
+	// Migration des modèles
+	database.Migrate(databaseSession)
 
-    // Initialisation des repositories
-    config.CatEntryRepository = dbmodel.NewCatEntryRepository(databaseSession)
+	// Initialisation des repositories
+	config.CatEntryRepository = dbmodel.NewCatEntryRepository(databaseSession)
 
-    return &config, nil
+	return &config, nil
 }
