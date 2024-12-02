@@ -15,6 +15,9 @@ type VisitEntry struct {
 type VisitEntryRepository interface {
 	Create(entry *VisitEntry) (*VisitEntry, error)
 	FindAll() ([]*VisitEntry, error)
+	Update(entry *VisitEntry) (*VisitEntry, error)
+	Delete(entry *VisitEntry) (*VisitEntry, error)
+	FindByID(id uint) (*VisitEntry, error)
 }
 
 type visitEntryRepository struct {
@@ -38,4 +41,31 @@ func (r *visitEntryRepository) FindAll() ([]*VisitEntry, error) {
 		return nil, err
 	}
 	return entries, nil
+}
+
+func (r *visitEntryRepository) Update(entry *VisitEntry) (*VisitEntry, error) {
+	if err := r.db.Model(&VisitEntry{}).Where("id = ?", entry.ID).Updates(VisitEntry{
+		Date:  entry.Date,
+		Motif: entry.Motif,
+		Veto:  entry.Veto,
+		IdCat: entry.IdCat,
+	}).Error; err != nil {
+		return nil, err
+	}
+	return entry, nil
+}
+
+func (r *visitEntryRepository) Delete(entry *VisitEntry) (*VisitEntry, error) {
+	if err := r.db.Delete(entry).Error; err != nil {
+		return nil, err
+	}
+	return entry, nil
+}
+
+func (r *visitEntryRepository) FindByID(id uint) (*VisitEntry, error) {
+	var visit VisitEntry
+	if err := r.db.First(&visit, id).Error; err != nil {
+		return nil, err
+	}
+	return &visit, nil
 }

@@ -50,3 +50,85 @@ func (config *TreatmentConfig) TreatmentHistoryHandler(w http.ResponseWriter, r 
 	}
 	render.JSON(w, r, newList)
 }
+
+func (config *TreatmentConfig) GetAllTreatmentHandler(w http.ResponseWriter, r *http.Request) {
+	entries, err := config.TreatmentEntryRepository.FindAll()
+	if err != nil {
+		render.JSON(w, r, map[string]string{"error": "Failed to retrieve history"})
+		return
+	}
+	render.JSON(w, r, entries)
+}
+
+func (config *TreatmentConfig) GetOneTreatmentHandler(w http.ResponseWriter, r *http.Request) {
+	treatmentId := chi.URLParam(r, "id")
+
+	entries, err := config.TreatmentEntryRepository.FindAll()
+	if err != nil {
+		render.JSON(w, r, map[string]string{"error": "Failed to retrieve history"})
+		return
+	}
+
+	intTreatmentId, _ := strconv.Atoi(treatmentId)
+	var treatmentTarget *dbmodel.TreatmentEntry
+
+	for _, treatment := range entries {
+		if treatment.ID == uint(intTreatmentId) {
+			treatmentTarget = treatment
+		}
+	}
+
+	render.JSON(w, r, treatmentTarget)
+}
+
+func (config *TreatmentConfig) UpdateTreatmentHandler(w http.ResponseWriter, r *http.Request) {
+	treatmentId := chi.URLParam(r, "id")
+	intTreatmentId, err := strconv.Atoi(treatmentId)
+	if err != nil {
+		render.JSON(w, r, map[string]string{"error": "Invalid treatment ID"})
+		return
+	}
+
+	treatmentEntry, err := config.TreatmentEntryRepository.FindByID(uint(intTreatmentId))
+	if err != nil {
+		render.JSON(w, r, map[string]string{"error": "Cat not found"})
+		return
+	}
+
+	req := &model.TreatmentRequest{}
+	if err := render.Bind(r, req); err != nil {
+		render.JSON(w, r, map[string]string{"error": "Invalid request payload"})
+		return
+	}
+
+	treatmentEntry.Medoc = req.Medoc
+	treatmentEntry.IdVisit = req.IdVisit
+
+	updatedTreatment, err := config.TreatmentEntryRepository.Update(treatmentEntry)
+	if err != nil {
+		render.JSON(w, r, map[string]string{"error": "Failed to update treatment"})
+		return
+	}
+
+	render.JSON(w, r, updatedTreatment)
+}
+
+func (config *TreatmentConfig) DeleteTreatmentHandler(w http.ResponseWriter, r *http.Request) {
+	treatmentId := chi.URLParam(r, "id")
+
+	entries, err := config.TreatmentEntryRepository.FindAll()
+	if err != nil {
+		render.JSON(w, r, map[string]string{"error": "Failed to retrieve history"})
+		return
+	}
+
+	intTreatmentId, err := strconv.Atoi(treatmentId)
+
+	for _, treatment := range entries {
+		if treatment.ID == uint(intTreatmentId) {
+			config.TreatmentEntryRepository.Delete(treatment)
+		}
+	}
+
+	render.JSON(w, r, "Oups, we have kill your cat!")
+}

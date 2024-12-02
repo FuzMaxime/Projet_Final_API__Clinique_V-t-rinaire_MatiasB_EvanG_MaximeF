@@ -49,3 +49,87 @@ func (config *VisitConfig) VisitHistoryHandler(w http.ResponseWriter, r *http.Re
 	}
 	render.JSON(w, r, newList)
 }
+
+func (config *VisitConfig) GetAllVisitHandler(w http.ResponseWriter, r *http.Request) {
+	entries, err := config.VisitEntryRepository.FindAll()
+	if err != nil {
+		render.JSON(w, r, map[string]string{"error": "Failed to retrieve history"})
+		return
+	}
+	render.JSON(w, r, entries)
+}
+
+func (config *VisitConfig) GetOneVisitHandler(w http.ResponseWriter, r *http.Request) {
+	visitId := chi.URLParam(r, "id")
+
+	entries, err := config.VisitEntryRepository.FindAll()
+	if err != nil {
+		render.JSON(w, r, map[string]string{"error": "Failed to retrieve history"})
+		return
+	}
+
+	intVisitId, _ := strconv.Atoi(visitId)
+	var visitTarget *dbmodel.VisitEntry
+
+	for _, visit := range entries {
+		if visit.ID == uint(intVisitId) {
+			visitTarget = visit
+		}
+	}
+
+	render.JSON(w, r, visitTarget)
+}
+
+func (config *VisitConfig) UpdateVisitHandler(w http.ResponseWriter, r *http.Request) {
+	visitId := chi.URLParam(r, "id")
+	intVisitId, err := strconv.Atoi(visitId)
+	if err != nil {
+		render.JSON(w, r, map[string]string{"error": "Invalid visit ID"})
+		return
+	}
+
+	visitEntry, err := config.VisitEntryRepository.FindByID(uint(intVisitId))
+	if err != nil {
+		render.JSON(w, r, map[string]string{"error": "Visit not found"})
+		return
+	}
+
+	req := &model.VisitRequest{}
+	if err := render.Bind(r, req); err != nil {
+		render.JSON(w, r, map[string]string{"error": "Invalid request payload"})
+		return
+	}
+
+	visitEntry.Date = req.Date
+	visitEntry.Motif = req.Motif
+	visitEntry.Veto = req.Veto
+	visitEntry.IdCat = req.IdCat
+
+	updatedVisit, err := config.VisitEntryRepository.Update(visitEntry)
+	if err != nil {
+		render.JSON(w, r, map[string]string{"error": "Failed to update visit"})
+		return
+	}
+
+	render.JSON(w, r, updatedVisit)
+}
+
+func (config *VisitConfig) DeleteVisitHandler(w http.ResponseWriter, r *http.Request) {
+	visitId := chi.URLParam(r, "id")
+
+	entries, err := config.VisitEntryRepository.FindAll()
+	if err != nil {
+		render.JSON(w, r, map[string]string{"error": "Failed to retrieve history"})
+		return
+	}
+
+	intvisitId, err := strconv.Atoi(visitId)
+
+	for _, visit := range entries {
+		if visit.ID == uint(intvisitId) {
+			config.VisitEntryRepository.Delete(visit)
+		}
+	}
+
+	render.JSON(w, r, "Oups, we have kill your visit!")
+}
