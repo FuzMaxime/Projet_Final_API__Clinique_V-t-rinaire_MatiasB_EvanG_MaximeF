@@ -7,11 +7,14 @@ import (
 )
 
 func Routes(configuration *config.Config) *chi.Mux {
-    catConfig := New(configuration)
-    router := chi.NewRouter()
+	catConfig := New(configuration)
+	router := chi.NewRouter()
 
-    router.Post("/age-in-cat-years", catConfig.CatHandler)
-    router.Get("/history", catConfig.CatHistoryHandler)
+	router.Post("/create-cat", catConfig.CreateCatHandler)
+	router.Get("/all-cats", catConfig.GetAllCatsHandler)
+	router.Get("/one-cat", catConfig.GetOneCatHandler)
+	router.Put("/update-cat", catConfig.UpdateCatHandler)
+	router.Delete("/delete-cat", catConfig.DeleteCatHandler)
 
-    return router
+	return router
 }
