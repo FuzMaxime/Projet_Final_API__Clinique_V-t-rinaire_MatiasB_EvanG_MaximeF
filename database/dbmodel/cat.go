@@ -60,3 +60,11 @@ func (r *catEntryRepository) Delete(entry *CatEntry) (*CatEntry, error) {
 	}
 	return entry, nil
 }
+
+func (r *catEntryRepository) FindByID(id uint) (*CatEntry, error) {
+	var cat CatEntry
+	if err := r.db.First(&cat, id).Error; err != nil {
+		return nil, err
+	}
+	return &cat, nil
+}

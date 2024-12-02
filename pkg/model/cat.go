@@ -1,7 +1,6 @@
 package model
 
 import (
-	"errors"
 	"net/http"
 )
 
@@ -13,9 +12,7 @@ type CatRequest struct {
 }
 
 func (a *CatRequest) Bind(r *http.Request) error {
-	if a.Age < 0 {
-		return errors.New("cat_age must be a positive integer")
-	}
+
 	return nil
 }
 

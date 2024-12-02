@@ -29,6 +29,8 @@ func New() (*Config, error) {
 
 	// Initialisation des repositories
 	config.CatEntryRepository = dbmodel.NewCatEntryRepository(databaseSession)
+	config.TreatmentEntryRepository = dbmodel.NewTreatmentEntryRepository(databaseSession)
+	config.VisitEntryRepository = dbmodel.NewVisitEntryRepository(databaseSession)
 
 	return &config, nil
 }

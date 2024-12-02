@@ -7,7 +7,7 @@ import (
 	"vet-clinic-api/database/dbmodel"
 	"vet-clinic-api/pkg/model"
 
-	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 )
 

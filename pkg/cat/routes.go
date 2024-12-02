@@ -12,9 +12,9 @@ func Routes(configuration *config.Config) *chi.Mux {
 
 	router.Post("/create-cat", catConfig.CreateCatHandler)
 	router.Get("/all-cats", catConfig.GetAllCatsHandler)
-	router.Get("/one-cat", catConfig.GetOneCatHandler)
-	router.Put("/update-cat", catConfig.UpdateCatHandler)
-	router.Delete("/delete-cat", catConfig.DeleteCatHandler)
+	router.Get("/one-cat/{id}", catConfig.GetOneCatHandler)
+	router.Put("/update-cat/{id}", catConfig.UpdateCatHandler)
+	router.Delete("/delete-cat/{id}", catConfig.DeleteCatHandler)
 
 	return router
 }
