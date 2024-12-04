@@ -1,21 +1,23 @@
-# Projet_Final_API\_\_Clinique_V-t-rinaire_MatiasB_EvanG_MaximeF
+# Documentation de l'API de Clinique Vétérinaire
 
-Documentation de l'API de Clinique Vétérinaire
-Introduction
+## Introduction
 Cette API permet de gérer les entrées de chats, les visites et les traitements dans une clinique vétérinaire. Elle est construite en utilisant Go et le framework Chi pour le routage.
 
-Endpoints
-Chats
-Créer un chat
-URL: /api/v1/clinique/cat/create-cat
-Méthode: POST
-Corps de la requête:
-{
-"cat_name": "Nom du chat",
-"cat_age": 3,
-"cat_race": "Race du chat",
-"cat_weight": 5
-}
+## Endpoints
+
+### Chats
+
+#### Créer un chat
+- **URL**: `/api/v1/clinique/cat/create-cat`
+- **Méthode**: `POST`
+- **Corps de la requête**:
+  ```json
+  {
+    "cat_name": "Nom du chat",
+    "cat_age": 3,
+    "cat_race": "Race du chat",
+    "cat_weight": 5
+  }
 Réponse:
 {
 "cat_name": "Nom du chat",
