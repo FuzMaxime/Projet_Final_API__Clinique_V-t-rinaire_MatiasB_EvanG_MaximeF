@@ -5,7 +5,7 @@ Cette API permet de gérer les entrées de chats, les visites et les traitements
 
 ## Endpoints
 
-### Chats
+## Chats
 
 #### Créer un chat
 - **URL**: `/api/v1/clinique/cat/create-cat`
@@ -27,6 +27,25 @@ Cette API permet de gérer les entrées de chats, les visites et les traitements
   "cat_weight": 5
   }
 
+### Obtenir tous les chats
+- **URL**: `/api/v1/clinique/cat/all-cats`
+- **Méthode**: `GET`
+- **Réponse**:
+  ```json
+  [
+    {
+        "ID": 1,
+        "CreatedAt": "2024-12-02T10:00:32.9010576+01:00",
+        "UpdatedAt": "2024-12-02T10:00:32.9010576+01:00",
+        "DeletedAt": null,
+        "cat_name": "doggo",
+        "cat_age": 150,
+        "cat_race": "pharaon",
+        "cat_weight": 150
+    },
+    ...
+  ]
+
 ## Obtenir un chat par ID
 - **URL**: `/api/v1/clinique/cat/one-cat/{id}`
 - **Méthode**: `GET`
@@ -38,6 +57,25 @@ Cette API permet de gérer les entrées de chats, les visites et les traitements
     "visit_motif": "Motif de la visite",
     "visit_id_cat": 1
   }
+
+### Obtenir les visites d'un chat par ID
+- **URL**: `/api/v1/clinique/cat/one-cat/{id}/visits`
+- **Méthode**: `GET`
+- **Réponse**:
+  ```json
+  [
+    {
+        "ID": 1,
+        "CreatedAt": "2024-12-02T14:43:22.7645512+01:00",
+        "UpdatedAt": "2024-12-02T15:25:02.4559814+01:00",
+        "DeletedAt": null,
+        "visit_date": "02/02/2004",
+        "visit_veto": "Evan",
+        "visit_motif": "dog",
+        "visit_id_cat": 6
+    },
+    ...
+  ]
 
 
 ### Mettre à jour un chat
@@ -118,6 +156,23 @@ Cette API permet de gérer les entrées de chats, les visites et les traitements
     "visit_id_cat": 1
   }
 
+### Obtenir les traitements d'une visite par ID
+- **URL**: `/api/v1/clinique/visit/one-visit/{id}/treatments`
+- **Méthode**: `GET`
+- **Réponse**:
+  ```json
+  [
+    {
+        "ID": 2,
+        "CreatedAt": "2024-12-02T15:22:50.8688315+01:00",
+        "UpdatedAt": "2024-12-02T15:22:50.8688315+01:00",
+        "DeletedAt": null,
+        "treatment_medoc": "doliprane",
+        "treatment_id_visit": 1
+    }
+    ...
+  ]
+
 ## Mettre à jour une visite
 -**URL**: `/api/v1/clinique/visit/update-visit/{id}`  
 -**Méthode**: `PUT`  
@@ -144,7 +199,7 @@ Cette API permet de gérer les entrées de chats, les visites et les traitements
 - **Réponse**:
   ```json
   {
-    "message": "Oups, nous avons tué votre visite !"
+    "message": "Vous avez supprimé la visite !"
   }
 
 ## Traitements
@@ -210,5 +265,5 @@ Cette API permet de gérer les entrées de chats, les visites et les traitements
 - **Réponse**:
   ```json
   {
-  "message": "Oups, nous avons tué votre traitement !"
+  "message": "Vous avez supprimé un traitement !"
   }
