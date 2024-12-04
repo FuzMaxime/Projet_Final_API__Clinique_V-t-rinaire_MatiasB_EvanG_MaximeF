@@ -131,5 +131,5 @@ func (config *VisitConfig) DeleteVisitHandler(w http.ResponseWriter, r *http.Req
 		}
 	}
 
-	render.JSON(w, r, "Oups, we have kill your visit!")
+	render.JSON(w, r, "You suppressed a visit!")
 }

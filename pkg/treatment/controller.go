@@ -130,5 +130,5 @@ func (config *TreatmentConfig) DeleteTreatmentHandler(w http.ResponseWriter, r *
 		}
 	}
 
-	render.JSON(w, r, "Oups, we have kill your cat!")
+	render.JSON(w, r, "You suppressed a treatment!")
 }
