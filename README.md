@@ -18,42 +18,47 @@ Cette API permet de gérer les entrées de chats, les visites et les traitements
     "cat_race": "Race du chat",
     "cat_weight": 5
   }
-Réponse:
-{
-"cat_name": "Nom du chat",
-"cat_age": 3,
-"cat_race": "Race du chat",
-"cat_weight": 5
-}
+- **Réponse**:
+  ```json
+  {
+  "cat_name": "Nom du chat",
+  "cat_age": 3,
+  "cat_race": "Race du chat",
+  "cat_weight": 5
+  }
 
-Obtenir un chat par ID
-URL: /api/v1/clinique/cat/one-cat/{id}
-Méthode: GET
-Réponse:
-{
-"visit_date": "2023-10-01",
-"visit_veto": "Nom du vétérinaire",
-"visit_motif": "Motif de la visite",
-"visit_id_cat": 1
-}
+## Obtenir un chat par ID
+- **URL**: `/api/v1/clinique/cat/one-cat/{id}`
+- **Méthode**: `GET`
+- **Réponse**:
+  ```json
+  {
+    "visit_date": "2023-10-01",
+    "visit_veto": "Nom du vétérinaire",
+    "visit_motif": "Motif de la visite",
+    "visit_id_cat": 1
+  }
 
-Mettre à jour un chat
-URL: /api/v1/clinique/cat/update-cat/{id}
-Méthode: PUT
-Corps de la requête:
-{
-"cat_name": "Nom du chat",
-"cat_age": 4,
-"cat_race": "Nouvelle race",
-"cat_weight": 6
-}
-Réponse:
-{
-"cat_name": "Nom du chat",
-"cat_age": 4,
-"cat_race": "Nouvelle race",
-"cat_weight": 6
-}
+
+### Mettre à jour un chat
+- **URL**: `/api/v1/clinique/cat/update-cat/{id}`
+- **Méthode**: `PUT`
+- **Corps de la requête**:
+  ```json
+  {
+    "cat_name": "Nom du chat",
+    "cat_age": 4,
+    "cat_race": "Nouvelle race",
+    "cat_weight": 6
+  }
+- **Réponse**:
+  ```json
+  {
+  "cat_name": "Nom du chat",
+  "cat_age": 4,
+  "cat_race": "Nouvelle race",
+  "cat_weight": 6
+  }
 
 Supprimer un chat
 URL: /api/v1/clinique/cat/delete-cat/{id}
