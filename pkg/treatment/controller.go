@@ -22,7 +22,7 @@ func New(configuration *config.Config) *TreatmentConfig {
 func (config *TreatmentConfig) TreatmentHandler(w http.ResponseWriter, r *http.Request) {
 	req := &model.TreatmentRequest{}
 	if err := render.Bind(r, req); err != nil {
-		render.JSON(w, r, map[string]string{"error": "Invalid request payload"})
+		render.JSON(w, r, map[string]string{"error": "Invalid treatment creation request loaded"})
 		return
 	}
 
@@ -37,6 +37,10 @@ func (config *TreatmentConfig) TreatmentHistoryHandler(w http.ResponseWriter, r 
 
 	IdVisit := chi.URLParam(r, "id_visit")
 	intIdVisit, err := strconv.Atoi(IdVisit)
+	if err != nil {
+		render.JSON(w, r, map[string]string{"error": "Invalid visit ID conversion"})
+		return
+	}
 	entries, err := config.TreatmentEntryRepository.FindAll()
 	newList := []*dbmodel.TreatmentEntry{}
 	for _, value := range entries {
@@ -69,7 +73,11 @@ func (config *TreatmentConfig) GetOneTreatmentHandler(w http.ResponseWriter, r *
 		return
 	}
 
-	intTreatmentId, _ := strconv.Atoi(treatmentId)
+	intTreatmentId, err := strconv.Atoi(treatmentId)
+	if err != nil {
+		render.JSON(w, r, map[string]string{"error": "Invalid treatment ID conversion"})
+		return
+	}
 	var treatmentTarget *dbmodel.TreatmentEntry
 
 	for _, treatment := range entries {
@@ -97,7 +105,7 @@ func (config *TreatmentConfig) UpdateTreatmentHandler(w http.ResponseWriter, r *
 
 	req := &model.TreatmentRequest{}
 	if err := render.Bind(r, req); err != nil {
-		render.JSON(w, r, map[string]string{"error": "Invalid request payload"})
+		render.JSON(w, r, map[string]string{"error": "Invalid treatment update request loaded"})
 		return
 	}
 
@@ -123,12 +131,17 @@ func (config *TreatmentConfig) DeleteTreatmentHandler(w http.ResponseWriter, r *
 	}
 
 	intTreatmentId, err := strconv.Atoi(treatmentId)
+	if err != nil {
+		render.JSON(w, r, map[string]string{"error": "Invalid treatment ID conversion"})
+		return
+	}
 
 	for _, treatment := range entries {
 		if treatment.ID == uint(intTreatmentId) {
 			config.TreatmentEntryRepository.Delete(treatment)
+			render.JSON(w, r, "You suppressed a treatment!")
 		}
 	}
 
-	render.JSON(w, r, "You suppressed a treatment!")
+	render.JSON(w, r, map[string]string{"error": "Treatment not found"})
 }

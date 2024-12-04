@@ -22,7 +22,7 @@ func New(configuration *config.Config) *CatConfig {
 func (config *CatConfig) CreateCatHandler(w http.ResponseWriter, r *http.Request) {
 	req := &model.CatRequest{}
 	if err := render.Bind(r, req); err != nil {
-		render.JSON(w, r, map[string]string{"error": "Invalid request payload"})
+		render.JSON(w, r, map[string]string{"error": "Invalid cat creation request loaded"})
 		return
 	}
 
@@ -60,6 +60,10 @@ func (config *CatConfig) GetOneCatHandler(w http.ResponseWriter, r *http.Request
 		}
 	}
 
+	if catTarget == nil {
+		render.JSON(w, r, map[string]string{"error": "Cat not found"})
+		return
+	}
 	render.JSON(w, r, catTarget)
 }
 
@@ -79,7 +83,7 @@ func (config *CatConfig) UpdateCatHandler(w http.ResponseWriter, r *http.Request
 
 	req := &model.CatRequest{}
 	if err := render.Bind(r, req); err != nil {
-		render.JSON(w, r, map[string]string{"error": "Invalid request payload"})
+		render.JSON(w, r, map[string]string{"error": "Invalid cat update request loaded"})
 		return
 	}
 
@@ -107,12 +111,16 @@ func (config *CatConfig) DeleteCatHandler(w http.ResponseWriter, r *http.Request
 	}
 
 	intcatId, err := strconv.Atoi(catId)
-
+	if err != nil {
+		render.JSON(w, r, map[string]string{"error": "Invalid cat ID conversion"})
+		return
+	}
 	for _, cat := range entries {
 		if cat.ID == uint(intcatId) {
 			config.CatEntryRepository.Delete(cat)
+			render.JSON(w, r, "Oups, we have kill your cat!")
 		}
 	}
 
-	render.JSON(w, r, "Oups, we have kill your cat!")
+	render.JSON(w, r, "Cat not found")
 }

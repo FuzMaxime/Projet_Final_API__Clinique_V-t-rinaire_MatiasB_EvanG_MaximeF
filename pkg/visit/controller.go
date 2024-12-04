@@ -22,7 +22,7 @@ func New(configuration *config.Config) *VisitConfig {
 func (config *VisitConfig) VisitHandler(w http.ResponseWriter, r *http.Request) {
 	req := &model.VisitRequest{}
 	if err := render.Bind(r, req); err != nil {
-		render.JSON(w, r, map[string]string{"error": "Invalid request payload"})
+		render.JSON(w, r, map[string]string{"error": "Invalid visit creation request loaded"})
 		return
 	}
 
@@ -35,7 +35,11 @@ func (config *VisitConfig) VisitHandler(w http.ResponseWriter, r *http.Request) 
 
 func (config *VisitConfig) VisitHistoryHandler(w http.ResponseWriter, r *http.Request) {
 	idCat := chi.URLParam(r, "id_cat")
-	intIdCat, _ := strconv.Atoi(idCat)
+	intIdCat, err := strconv.Atoi(idCat)
+	if err != nil {
+		render.JSON(w, r, map[string]string{"error": "Invalid cat ID conversion"})
+		return
+	}
 	entries, err := config.VisitEntryRepository.FindAll()
 	newList := []*dbmodel.VisitEntry{}
 	for _, value := range entries {
@@ -68,7 +72,11 @@ func (config *VisitConfig) GetOneVisitHandler(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	intVisitId, _ := strconv.Atoi(visitId)
+	intVisitId, err := strconv.Atoi(visitId)
+	if err != nil {
+		render.JSON(w, r, map[string]string{"error": "Invalid visit ID conversion"})
+		return
+	}
 	var visitTarget *dbmodel.VisitEntry
 
 	for _, visit := range entries {
@@ -84,7 +92,7 @@ func (config *VisitConfig) UpdateVisitHandler(w http.ResponseWriter, r *http.Req
 	visitId := chi.URLParam(r, "id")
 	intVisitId, err := strconv.Atoi(visitId)
 	if err != nil {
-		render.JSON(w, r, map[string]string{"error": "Invalid visit ID"})
+		render.JSON(w, r, map[string]string{"error": "Invalid visit ID conversion"})
 		return
 	}
 
@@ -96,7 +104,7 @@ func (config *VisitConfig) UpdateVisitHandler(w http.ResponseWriter, r *http.Req
 
 	req := &model.VisitRequest{}
 	if err := render.Bind(r, req); err != nil {
-		render.JSON(w, r, map[string]string{"error": "Invalid request payload"})
+		render.JSON(w, r, map[string]string{"error": "Invalid visit update request loaded"})
 		return
 	}
 
@@ -124,12 +132,17 @@ func (config *VisitConfig) DeleteVisitHandler(w http.ResponseWriter, r *http.Req
 	}
 
 	intvisitId, err := strconv.Atoi(visitId)
+	if err != nil {
+		render.JSON(w, r, map[string]string{"error": "Invalid visit ID conversion"})
+		return
+	}
 
 	for _, visit := range entries {
 		if visit.ID == uint(intvisitId) {
 			config.VisitEntryRepository.Delete(visit)
+			render.JSON(w, r, "You suppressed a visit!")
 		}
 	}
 
-	render.JSON(w, r, "You suppressed a visit!")
+	render.JSON(w, r, map[string]string{"error": "Visit not found"})
 }
