@@ -119,6 +119,7 @@ func (config *CatConfig) DeleteCatHandler(w http.ResponseWriter, r *http.Request
 		if cat.ID == uint(intcatId) {
 			config.CatEntryRepository.Delete(cat)
 			render.JSON(w, r, "Oups, we have kill your cat!")
+			return
 		}
 	}
 

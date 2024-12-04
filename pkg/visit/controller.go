@@ -85,6 +85,11 @@ func (config *VisitConfig) GetOneVisitHandler(w http.ResponseWriter, r *http.Req
 		}
 	}
 
+	if visitTarget == nil {
+		render.JSON(w, r, map[string]string{"error": "Visit not found"})
+		return
+	}
+
 	render.JSON(w, r, visitTarget)
 }
 
@@ -141,6 +146,7 @@ func (config *VisitConfig) DeleteVisitHandler(w http.ResponseWriter, r *http.Req
 		if visit.ID == uint(intvisitId) {
 			config.VisitEntryRepository.Delete(visit)
 			render.JSON(w, r, "You suppressed a visit!")
+			return
 		}
 	}
 

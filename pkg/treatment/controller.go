@@ -86,6 +86,10 @@ func (config *TreatmentConfig) GetOneTreatmentHandler(w http.ResponseWriter, r *
 		}
 	}
 
+	if treatmentTarget == nil {
+		render.JSON(w, r, map[string]string{"error": "Treatment not found"})
+		return
+	}
 	render.JSON(w, r, treatmentTarget)
 }
 
@@ -99,7 +103,7 @@ func (config *TreatmentConfig) UpdateTreatmentHandler(w http.ResponseWriter, r *
 
 	treatmentEntry, err := config.TreatmentEntryRepository.FindByID(uint(intTreatmentId))
 	if err != nil {
-		render.JSON(w, r, map[string]string{"error": "Cat not found"})
+		render.JSON(w, r, map[string]string{"error": "Treatment not found"})
 		return
 	}
 
@@ -140,6 +144,7 @@ func (config *TreatmentConfig) DeleteTreatmentHandler(w http.ResponseWriter, r *
 		if treatment.ID == uint(intTreatmentId) {
 			config.TreatmentEntryRepository.Delete(treatment)
 			render.JSON(w, r, "You suppressed a treatment!")
+			return
 		}
 	}
 
