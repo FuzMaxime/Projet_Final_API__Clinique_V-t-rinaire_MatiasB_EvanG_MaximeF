@@ -59,7 +59,7 @@ Cette API permet de gérer les entrées de chats, les visites et les traitements
   }
 
 ### Obtenir les visites d'un chat par ID
-- **URL**: `/api/v1/clinique/cat/one-cat/{id}/visits`
+- **URL**: `/api/v1/clinique/cat/one-cat/{id_cat}/visits`
 - **Méthode**: `GET`
 - **Réponse**:
   ```json
@@ -157,7 +157,7 @@ Cette API permet de gérer les entrées de chats, les visites et les traitements
   }
 
 ### Obtenir les traitements d'une visite par ID
-- **URL**: `/api/v1/clinique/visit/one-visit/{id}/treatments`
+- **URL**: `/api/v1/clinique/visit/one-visit/{id_visit}/treatments`
 - **Méthode**: `GET`
 - **Réponse**:
   ```json
